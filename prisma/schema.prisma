@@ -1,0 +1,72 @@
+// Carbon Dashboard - Prisma Schema
+// PCF (Product Carbon Footprint) 대시보드를 위한 데이터 모델
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 배출계수 테이블 - 항목별 기본 정보
+model EmissionFactor {
+  id           String   @id @default(cuid())
+  category     Category // 전기, 원소재, 운송
+  name         String   // 한국전력, 플라스틱1, 트럭 등
+  unit         String   // kWh, kg, ton-km
+  currentValue Float    // 현재 적용 중인 배출계수
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  versions   EmissionFactorVersion[]
+  activities Activity[]
+
+  @@unique([category, name])
+  @@map("emission_factors")
+}
+
+// 배출계수 버전 이력 - 변경 추적용
+model EmissionFactorVersion {
+  id               String   @id @default(cuid())
+  emissionFactorId String
+  value            Float    // 해당 시점의 배출계수 값
+  validFrom        DateTime // 적용 시작일
+  validTo          DateTime? // 적용 종료일 (null이면 현재 적용 중)
+  createdAt        DateTime @default(now())
+  createdBy        String?  // 변경한 사용자
+
+  // Relations
+  emissionFactor EmissionFactor @relation(fields: [emissionFactorId], references: [id], onDelete: Cascade)
+
+  @@map("emission_factor_versions")
+}
+
+// 활동 데이터 - 전기/원소재/운송 사용량
+model Activity {
+  id                 String   @id @default(cuid())
+  date               DateTime // 활동 일자 (월 단위)
+  category           Category // 전기, 원소재, 운송
+  name               String   // 한국전력, 플라스틱1, 트럭 등
+  amount             Float    // 사용량
+  unit               String   // kWh, kg, ton-km
+  scope              Int      // GHG Protocol Scope (2 or 3)
+  emissionFactorId   String?
+  calculatedEmission Float?   // 계산된 배출량 (amount * emissionFactor)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relations
+  emissionFactor EmissionFactor? @relation(fields: [emissionFactorId], references: [id])
+
+  @@map("activities")
+}
+
+// 카테고리 enum
+enum Category {
+  ELECTRICITY // 전기
+  RAW_MATERIAL // 원소재
+  TRANSPORT   // 운송
+}
