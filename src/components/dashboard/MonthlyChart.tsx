@@ -47,7 +47,7 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
                 tickFormatter={(value) => `${value}`}
               />
               <Tooltip
-                formatter={(value: number) => [`${value.toLocaleString()} kgCO₂e`]}
+                formatter={(value) => [`${Number(value).toLocaleString()} kgCO₂e`]}
                 labelFormatter={(label) => `2025년 ${label}`}
                 contentStyle={{
                   backgroundColor: "white",

@@ -18,15 +18,16 @@ interface CategoryData {
   emission: number;
 }
 
-interface CategoryChartProps {
-  data: CategoryData[];
-}
-
-const COLORS: Record<string, string> = {
+// 카테고리별 색상
+const CATEGORY_COLORS: Record<string, string> = {
   ELECTRICITY: "#3B82F6",
   RAW_MATERIAL: "#10B981",
   TRANSPORT: "#F59E0B",
 };
+
+interface CategoryChartProps {
+  data: CategoryData[];
+}
 
 export function CategoryChart({ data }: CategoryChartProps) {
   return (
@@ -59,7 +60,7 @@ export function CategoryChart({ data }: CategoryChartProps) {
                 width={50}
               />
               <Tooltip
-                formatter={(value: number) => [`${value.toLocaleString()} kgCO₂e`]}
+                formatter={(value) => [`${Number(value).toLocaleString()} kgCO₂e`]}
                 contentStyle={{
                   backgroundColor: "white",
                   border: "1px solid #e5e7eb",
@@ -67,8 +68,8 @@ export function CategoryChart({ data }: CategoryChartProps) {
                 }}
               />
               <Bar dataKey="emission" radius={[0, 4, 4, 0]}>
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[entry.category] || "#6B7280"} />
+                {data.map((entry) => (
+                  <Cell key={`cell-${entry.category}`} fill={CATEGORY_COLORS[entry.category]} />
                 ))}
               </Bar>
             </BarChart>
