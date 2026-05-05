@@ -75,12 +75,16 @@ export function SummaryCards({
             <p className="text-sm font-medium text-gray-500">전월 대비</p>
             <div
               className={`rounded-full p-2 ${
-                monthChange && monthChange > 0
+                monthChange === null
+                  ? "bg-gray-100"
+                  : monthChange > 0
                   ? "bg-red-100"
                   : "bg-green-100"
               }`}
             >
-              {monthChange && monthChange > 0 ? (
+              {monthChange === null ? (
+                <TrendingUp className="h-4 w-4 text-gray-400" />
+              ) : monthChange > 0 ? (
                 <TrendingUp className="h-4 w-4 text-red-600" />
               ) : (
                 <TrendingDown className="h-4 w-4 text-green-600" />
@@ -89,13 +93,21 @@ export function SummaryCards({
           </div>
           <p
             className={`mt-2 text-3xl font-bold ${
-              monthChange && monthChange > 0 ? "text-red-600" : "text-green-600"
+              monthChange === null
+                ? "text-gray-400"
+                : monthChange > 0
+                ? "text-red-600"
+                : "text-green-600"
             }`}
           >
             {monthChange !== null ? `${monthChange > 0 ? "+" : ""}${monthChange}%` : "-"}
           </p>
           <p className="text-sm text-gray-500">
-            {monthChange && monthChange > 0 ? "증가" : "감소"}
+            {monthChange === null
+              ? "데이터 없음"
+              : monthChange > 0
+              ? "증가"
+              : "감소"}
           </p>
         </CardContent>
       </Card>
