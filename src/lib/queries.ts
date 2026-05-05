@@ -1,8 +1,28 @@
 import prisma from "./db";
 import { Category } from "@/generated/prisma/client";
 
+// 타입 정의
+export interface ScopeEmission {
+  scope2: number;
+  scope3: number;
+}
+
+export interface MonthlyEmission {
+  month: string;
+  monthLabel: string;
+  scope2: number;
+  scope3: number;
+  total: number;
+}
+
+export interface CategoryEmission {
+  category: Category;
+  label: string;
+  emission: number;
+}
+
 // 총 배출량 조회
-export async function getTotalEmission() {
+export async function getTotalEmission(): Promise<number> {
   const result = await prisma.activity.aggregate({
     _sum: { calculatedEmission: true },
   });
@@ -10,7 +30,7 @@ export async function getTotalEmission() {
 }
 
 // Scope별 배출량 조회
-export async function getEmissionByScope() {
+export async function getEmissionByScope(): Promise<ScopeEmission> {
   const scope2 = await prisma.activity.aggregate({
     where: { scope: 2 },
     _sum: { calculatedEmission: true },
@@ -28,7 +48,7 @@ export async function getEmissionByScope() {
 }
 
 // 월별 배출량 조회
-export async function getMonthlyEmissions() {
+export async function getMonthlyEmissions(): Promise<MonthlyEmission[]> {
   const activities = await prisma.activity.findMany({
     select: {
       date: true,
@@ -64,7 +84,7 @@ export async function getMonthlyEmissions() {
 }
 
 // 카테고리별 배출량 조회
-export async function getEmissionByCategory() {
+export async function getEmissionByCategory(): Promise<CategoryEmission[]> {
   const result = await prisma.activity.groupBy({
     by: ["category"],
     _sum: { calculatedEmission: true },
@@ -84,7 +104,7 @@ export async function getEmissionByCategory() {
 }
 
 // 전월 대비 변화율 계산
-export async function getMonthOverMonthChange() {
+export async function getMonthOverMonthChange(): Promise<number | null> {
   const monthly = await getMonthlyEmissions();
 
   if (monthly.length < 2) return null;

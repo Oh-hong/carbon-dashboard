@@ -7,12 +7,14 @@ const globalForPrisma = globalThis as unknown as {
   pool: pg.Pool | undefined;
 };
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL 환경변수가 설정되지 않았습니다.");
+}
+
 const pool =
   globalForPrisma.pool ??
   new pg.Pool({
-    connectionString:
-      process.env.DATABASE_URL ||
-      "postgresql://hongjungi@localhost:5432/carbon_dashboard",
+    connectionString: process.env.DATABASE_URL,
   });
 
 const adapter = new PrismaPg(pool);
