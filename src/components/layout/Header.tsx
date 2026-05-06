@@ -2,6 +2,7 @@
 
 import { Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MobileSidebar } from "./Sidebar";
 
 interface HeaderProps {
   title?: string;
@@ -9,8 +10,10 @@ interface HeaderProps {
 
 export function Header({ title = "대시보드" }: HeaderProps) {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6">
-      <div>
+    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 lg:px-6">
+      <div className="flex items-center gap-3">
+        {/* 모바일 메뉴 버튼 */}
+        <MobileSidebar />
         <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
       </div>
 
