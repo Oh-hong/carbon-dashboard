@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { History, Pencil } from "lucide-react";
 import { EditDialog } from "./EditDialog";
 import { VersionHistoryDialog } from "./VersionHistoryDialog";
+import { CATEGORY_LABELS, CATEGORY_COLORS } from "@/lib/constants";
 
 interface EmissionFactor {
   id: string;
@@ -29,18 +30,6 @@ interface EmissionFactor {
 interface EmissionFactorTableProps {
   factors: EmissionFactor[];
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  ELECTRICITY: "전기",
-  RAW_MATERIAL: "원소재",
-  TRANSPORT: "운송",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  ELECTRICITY: "bg-blue-100 text-blue-800",
-  RAW_MATERIAL: "bg-emerald-100 text-emerald-800",
-  TRANSPORT: "bg-amber-100 text-amber-800",
-};
 
 export function EmissionFactorTable({ factors }: EmissionFactorTableProps) {
   const [editingFactor, setEditingFactor] = useState<EmissionFactor | null>(null);

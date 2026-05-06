@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { CATEGORY_LABELS } from "@/lib/constants";
 
 interface EmissionFactor {
   id: string;
@@ -24,12 +25,6 @@ interface EditDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  ELECTRICITY: "전기",
-  RAW_MATERIAL: "원소재",
-  TRANSPORT: "운송",
-};
 
 export function EditDialog({ factor, open, onClose }: EditDialogProps) {
   const router = useRouter();

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CATEGORY_LABELS, CATEGORY_COLORS } from "@/lib/constants";
 
 interface Activity {
   id: string;
@@ -25,18 +26,6 @@ interface Activity {
 interface ActivityTableProps {
   activities: Activity[];
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  ELECTRICITY: "전기",
-  RAW_MATERIAL: "원소재",
-  TRANSPORT: "운송",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  ELECTRICITY: "bg-blue-100 text-blue-800",
-  RAW_MATERIAL: "bg-emerald-100 text-emerald-800",
-  TRANSPORT: "bg-amber-100 text-amber-800",
-};
 
 export function ActivityTable({ activities }: ActivityTableProps) {
   if (activities.length === 0) {

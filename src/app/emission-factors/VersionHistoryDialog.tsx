@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
+import { CATEGORY_LABELS } from "@/lib/constants";
 
 interface Version {
   id: string;
@@ -33,12 +34,6 @@ interface VersionHistoryDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  ELECTRICITY: "전기",
-  RAW_MATERIAL: "원소재",
-  TRANSPORT: "운송",
-};
 
 export function VersionHistoryDialog({ factorId, open, onClose }: VersionHistoryDialogProps) {
   const [data, setData] = useState<FactorDetail | null>(null);

@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { X } from "lucide-react";
+import { CATEGORY_OPTIONS, SCOPE_OPTIONS } from "@/lib/constants";
 
 interface ActivityFiltersProps {
   availableMonths: string[];
@@ -20,17 +21,6 @@ interface ActivityFiltersProps {
     scope?: number;
   };
 }
-
-const CATEGORY_OPTIONS = [
-  { value: "ELECTRICITY", label: "전기" },
-  { value: "RAW_MATERIAL", label: "원소재" },
-  { value: "TRANSPORT", label: "운송" },
-];
-
-const SCOPE_OPTIONS = [
-  { value: "2", label: "Scope 2" },
-  { value: "3", label: "Scope 3" },
-];
 
 export function ActivityFilters({ availableMonths, currentFilters }: ActivityFiltersProps) {
   const router = useRouter();
