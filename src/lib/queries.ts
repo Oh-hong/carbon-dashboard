@@ -117,3 +117,81 @@ export async function getMonthOverMonthChange(): Promise<number | null> {
   const change = ((current - previous) / previous) * 100;
   return Math.round(change * 10) / 10;
 }
+
+// 활동 데이터 타입
+export interface ActivityItem {
+  id: string;
+  date: Date;
+  category: Category;
+  name: string;
+  amount: number;
+  unit: string;
+  scope: number;
+  calculatedEmission: number | null;
+}
+
+// 활동 데이터 필터
+export interface ActivityFilters {
+  month?: string; // "2025-01" 형식
+  category?: Category;
+  scope?: number;
+}
+
+// 활동 데이터 조회 (필터 지원)
+export async function getActivities(filters?: ActivityFilters): Promise<ActivityItem[]> {
+  const where: {
+    date?: { gte: Date; lt: Date };
+    category?: Category;
+    scope?: number;
+  } = {};
+
+  // 월 필터
+  if (filters?.month) {
+    const [year, month] = filters.month.split("-").map(Number);
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
+    where.date = { gte: startDate, lt: endDate };
+  }
+
+  // 카테고리 필터
+  if (filters?.category) {
+    where.category = filters.category;
+  }
+
+  // Scope 필터
+  if (filters?.scope) {
+    where.scope = filters.scope;
+  }
+
+  const activities = await prisma.activity.findMany({
+    where,
+    orderBy: { date: "desc" },
+  });
+
+  return activities.map((activity) => ({
+    id: activity.id,
+    date: activity.date,
+    category: activity.category,
+    name: activity.name,
+    amount: activity.amount,
+    unit: activity.unit,
+    scope: activity.scope,
+    calculatedEmission: activity.calculatedEmission,
+  }));
+}
+
+// 사용 가능한 월 목록 조회
+export async function getAvailableMonths(): Promise<string[]> {
+  const activities = await prisma.activity.findMany({
+    select: { date: true },
+    distinct: ["date"],
+    orderBy: { date: "desc" },
+  });
+
+  const months = new Set<string>();
+  activities.forEach((a) => {
+    months.add(a.date.toISOString().slice(0, 7));
+  });
+
+  return Array.from(months).sort().reverse();
+}
